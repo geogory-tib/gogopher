@@ -117,7 +117,7 @@ func (svr Server) load_and_write_gophermap(conn net.Conn, path string) {
 		line := scanner.Text()
 		if len(line) > 0 {
 			if line[0] == 'i' {
-				builder.WriteString(line + "\r\n")
+				builder.WriteString(line + "\t" + "\" + \t" + splitaddr[0] + "\t" + splitaddr[1] + "\r\n")
 			} else {
 				builder.WriteString(line + "\t" + splitaddr[0] + "\t" + splitaddr[1] + "\r\n")
 			}
