@@ -82,14 +82,19 @@ func (server Server) handle_con(conn net.Conn) {
 	if string(request_buffer) == "\r\n" || len(request_buffer) == 0 {
 		server.load_and_write_gophermap(conn, server.server_dir)
 	} else {
-		file_stat, err := os.Stat(server.server_dir + string(request_buffer))
+		path := server.server_dir + string(request_buffer)
+		path = strings.Trim(path, "\n\r")
+		file_stat, err := os.Stat(path)
 		if err != nil {
 			if errors.Is(err, os.ErrNotExist) {
 				conn.Write([]byte(FILE_NOT_FOUND_ERROR))
+				return
 			}
 		}
 		if file_stat.IsDir() {
-			server.load_and_write_gophermap(conn, server.server_dir+string(request_buffer))
+			server.load_and_write_gophermap(conn, path)
+		} else {
+			server.load_and_send_file(conn, path)
 		}
 	}
 }
@@ -102,10 +107,11 @@ func (svr Server) load_and_write_gophermap(conn net.Conn, path string) {
 			return
 		}
 	}
+	defer file.Close()
 	scanner := bufio.NewScanner(file)
 	builder := strings.Builder{}
 	builder.Grow(200)
-	splitaddr := strings.Split(server.addr, ":")
+	splitaddr := strings.Split(svr.addr, ":")
 	for scanner.Scan() {
 		line := scanner.Text()
 		if line[0] == 'i' {
@@ -114,6 +120,7 @@ func (svr Server) load_and_write_gophermap(conn net.Conn, path string) {
 			builder.WriteString(scanner.Text() + "\t" + splitaddr[0] + "\t" + splitaddr[1] + "\r\n")
 		}
 	}
+	builder.WriteString(".\r\n")
 	built_map := builder.String()
 	// log.Println(built_map)
 	conn.Write([]byte(built_map))
@@ -125,9 +132,13 @@ func (svr Server) load_and_send_file(conn net.Conn, path string) {
 		log.Println(err)
 		conn.Write([]byte(FILE_NOT_FOUND_ERROR))
 	}
-	scanner := bufio.NewScanner(file)
-	buffer := make([]byte, 0, 4096)
-	for scanner.Scan() {
-		scanner.Bytes()
+	file.Seek(0, io.SeekStart)
+	defer file.Close()
+	scanner := bufio.NewReader(file)
+	buffer, err := io.ReadAll(scanner)
+	if err != nil {
+		log.Println(err)
+		return
 	}
+	conn.Write(buffer)
 }
