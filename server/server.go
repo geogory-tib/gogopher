@@ -109,15 +109,18 @@ func (svr Server) load_and_write_gophermap(conn net.Conn, path string) {
 	}
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
+	scanner_buffer := make([]byte, 0, 100000)
+	scanner.Buffer(scanner_buffer, len(scanner_buffer))
 	builder := strings.Builder{}
-	builder.Grow(200)
 	splitaddr := strings.Split(svr.addr, ":")
 	for scanner.Scan() {
 		line := scanner.Text()
-		if line[0] == 'i' {
-			builder.WriteString(line + "\r\n")
-		} else {
-			builder.WriteString(scanner.Text() + "\t" + splitaddr[0] + "\t" + splitaddr[1] + "\r\n")
+		if len(line) > 0 {
+			if line[0] == 'i' {
+				builder.WriteString(line + "\r\n")
+			} else {
+				builder.WriteString(line + "\t" + splitaddr[0] + "\t" + splitaddr[1] + "\r\n")
+			}
 		}
 	}
 	builder.WriteString(".\r\n")

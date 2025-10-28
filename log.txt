@@ -1,4 +1,16 @@
-2025/10/28 00:18:23 Size: 2 Request: 
+2025/10/28 11:50:45 Size: 2 Request: 
 
-2025/10/28 00:18:24 Size: 11 Request: /test.png
+2025/10/28 11:51:40 Size: 0 Request: 
+2025/10/28 11:51:40 read tcp 127.0.0.1:6969->127.0.0.1:53815: i/o timeout
+2025/10/28 11:51:45 Size: 7 Request: /link
+
+2025/10/28 11:51:49 Size: 8 Request: /links
+
+2025/10/28 11:52:10 Size: 7 Request: /blog
+
+2025/10/28 11:52:27 Size: 0 Request: 
+2025/10/28 11:52:27 read tcp 127.0.0.1:6969->127.0.0.1:53824: i/o timeout
+2025/10/28 11:52:34 Size: 0 Request: 
+2025/10/28 11:52:34 read tcp 127.0.0.1:6969->127.0.0.1:53826: i/o timeout
+2025/10/28 11:52:43 Size: 24 Request: /blog/gopherserver.txt
 
