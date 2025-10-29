@@ -8,6 +8,7 @@ import (
 	"log"
 	"net"
 	"os"
+	"os/exec"
 	"strings"
 	"time"
 )
@@ -23,6 +24,7 @@ type Server struct {
 	addr       string
 	server_dir string
 	log_file   *os.File
+	search_dir string
 }
 
 func New_Instance() (ret Server) {
@@ -31,6 +33,7 @@ func New_Instance() (ret Server) {
 		Port         string `json:"port"`
 		Root_dir     string `json:"root_dir"`
 		Log_File_dir string `json:"log_file"`
+		Search_Dir   string `json:"search_dir"`
 	}{}
 	conf_file, err := os.Open("config.json")
 	if err != nil {
@@ -52,6 +55,7 @@ func New_Instance() (ret Server) {
 		ret.log_file = os.Stdin
 	}
 	log.SetOutput(ret.log_file)
+	ret.search_dir = conf_struct.Search_Dir
 	ret.server_dir = conf_struct.Root_dir
 	return
 }
@@ -81,6 +85,10 @@ func (server Server) handle_con(conn net.Conn) {
 	}
 	if string(request_buffer) == "\r\n" || len(request_buffer) == 0 {
 		server.load_and_write_gophermap(conn, server.server_dir)
+	} else if strings.Contains(string(request_buffer), server.search_dir) {
+		if len(request_buffer) > len(server.search_dir)+2 {
+			server.handle_search(conn, string(request_buffer))
+		}
 	} else {
 		path := server.server_dir + string(request_buffer)
 		path = strings.Trim(path, "\n\r")
@@ -109,8 +117,6 @@ func (svr Server) load_and_write_gophermap(conn net.Conn, path string) {
 	}
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
-	scanner_buffer := make([]byte, 0, 100000)
-	scanner.Buffer(scanner_buffer, len(scanner_buffer))
 	builder := strings.Builder{}
 	splitaddr := strings.Split(svr.addr, ":")
 	for scanner.Scan() {
@@ -144,4 +150,24 @@ func (svr Server) load_and_send_file(conn net.Conn, path string) {
 		return
 	}
 	conn.Write(buffer)
+}
+
+func (svr Server) handle_search(conn net.Conn, request string) {
+	split_request := strings.Split(request, "\t")
+
+	search_prg := exec.Command(svr.server_dir + svr.search_dir)
+	stdin_pipe, err := search_prg.StdinPipe()
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	adress_and_port := strings.Split(svr.addr, ":")
+	go func() {
+		defer stdin_pipe.Close()
+		stdin_pipe.Write([]byte(adress_and_port[0] + "\t" + adress_and_port[1] + "\t" + svr.server_dir + "\t" + split_request[1]))
+	}()
+	search_result, err := search_prg.CombinedOutput()
+	log.Println(err)
+	log.Println(string(search_result))
+	conn.Write(search_result)
 }

@@ -2,5 +2,6 @@
   "ip":"localhost",
   "port":"6969",
   "root_dir":"/Users/samueljohnson/gopher",
-  "log_file":"log.txt"
+  "log_file":"log.txt",
+  "search_dir":"/search/gsearch"
 }

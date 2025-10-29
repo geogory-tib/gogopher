@@ -1,10 +1,20 @@
-2025/10/28 13:09:13 Size: 1 Request: 
+2025/10/29 13:54:26 Size: 2 Request: 
 
-2025/10/28 13:09:19 Size: 7 Request: /links
+2025/10/29 13:54:32 Size: 24 Request: /search/gsearch	gopher
 
-2025/10/28 13:10:09 Size: 1 Request: 
+2025/10/29 13:54:33 <nil>
+2025/10/29 13:54:33 0I made a gopher server!	/blog/gopherserver.txt	localhost	6969
 
-2025/10/28 13:10:22 Size: 2 Request: 
+2025/10/29 13:54:37 Size: 24 Request: /blog/gopherserver.txt
 
-2025/10/28 13:10:27 Size: 7 Request: /blog
+2025/10/29 13:54:50 Size: 1 Request: 
+
+2025/10/29 13:54:53 Size: 16 Request: /search/gsearch
+
+2025/10/29 13:54:56 Size: 23 Request: /search/gsearch	gopher
+
+2025/10/29 13:54:56 <nil>
+2025/10/29 13:54:56 0I made a gopher server!	/blog/gopherserver.txt	localhost	6969
+
+2025/10/29 13:54:57 Size: 23 Request: /blog/gopherserver.txt
 
