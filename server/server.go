@@ -88,6 +88,7 @@ func (server Server) handle_con(conn net.Conn) {
 	} else if strings.Contains(string(request_buffer), server.search_dir) {
 		if len(request_buffer) > len(server.search_dir)+2 {
 			server.handle_search(conn, string(request_buffer))
+			return
 		}
 	} else {
 		path := server.server_dir + string(request_buffer)
@@ -96,8 +97,9 @@ func (server Server) handle_con(conn net.Conn) {
 		if err != nil {
 			if errors.Is(err, os.ErrNotExist) {
 				conn.Write([]byte(FILE_NOT_FOUND_ERROR))
-				return
 			}
+			log.Println(err)
+			return
 		}
 		if file_stat.IsDir() {
 			server.load_and_write_gophermap(conn, path)

@@ -1,7 +1,7 @@
 {
   "ip":"localhost",
   "port":"6969",
-  "root_dir":"/Users/samueljohnson/gopher",
+  "root_dir":"/home/example/gopher_dir",
   "log_file":"log.txt",
   "search_dir":"/search/gsearch"
 }

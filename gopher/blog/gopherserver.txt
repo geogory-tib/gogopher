@@ -1,0 +1,18 @@
+  As any of you who may know me, know that I am trying to learn how to code. One of the things I find myself not doing much is networking stuff
+,as a result I decided that I would try to make a server for the gopher protocol! I thought about doing gemini, but the idea of a plaintext network
+protcol seemed interesting to me. I tend to hate using the internet due to it's huge bloat that even the simpliest of websites have anymore. With gopher
+this doesn't exist, it's as simple as it can be and it retains a lot of the spark the old internet people seem to talk about a lot (I wasn't alive back then).
+I really do enjoy looking at these gopherspaces, it's neat what people do with them, I've even seen some people do dynamic sites somehow?
+
+
+  I though about eventually rewriting this server in odin or c so I can embed lua into this, so the server could run scripts to kind of add some sort of dynamic
+text injection to the gophermenus or what not. I still need to perfect this server so, that won't be for a while. My gopher server is good enough for basic stuff
+but for some reason my client won't download images I send from my server? Not sure exactly what's going on but I will have to test it on some other binary formats.
+I am also probably missing some other things from the offical spec I need to implement. the server right now is setting at like 150ish lines of code,
+which isn't a lot but it still works!
+
+Anyways have a nice night
+
+
+
+geogory
